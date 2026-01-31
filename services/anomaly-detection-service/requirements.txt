@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+kafka-python
+redis
+numpy
+scikit-learn
+torch
+pydantic

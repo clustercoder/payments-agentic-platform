@@ -73,3 +73,12 @@ services:
       - redis
       - clickhouse
 
+  anomaly-detector:
+    build: ./services/anomaly-detection-service
+    container_name: anomaly-detector
+    depends_on:
+      - redpanda
+      - redis
+    ports:
+      - "8002:8002"
+

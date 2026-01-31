@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+kafka-python
+clickhouse-driver
+redis
+prometheus-client

@@ -17,9 +17,14 @@ services:
       - --node-id
       - "0"
       - --check=false
+      - --kafka-addr
+      - PLAINTEXT://0.0.0.0:9092
+      - --advertise-kafka-addr
+      - PLAINTEXT://redpanda:9092
     ports:
       - "9092:9092"
       - "9644:9644"
+
 
   redis:
     image: redis:7
@@ -33,6 +38,11 @@ services:
     ports:
       - "8123:8123"
       - "9000:9000"
+    environment:
+      - CLICKHOUSE_DB=default
+      - CLICKHOUSE_USER=default
+      - CLICKHOUSE_PASSWORD=password
+      - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=1
 
   prometheus:
     image: prom/prometheus
@@ -53,3 +63,13 @@ services:
       - "8000:8000"
     depends_on:
       - redpanda
+
+  stream-processor:
+    build: ./services/stream-processor-service
+    ports:
+      - "8001:8001"
+    depends_on:
+      - redpanda
+      - redis
+      - clickhouse
+

@@ -1,0 +1,15 @@
+{
+    "event_id": "uuid",
+    "timestamp": "iso8601",
+    "merchant_id": "string",
+    "payment_id": "string",
+    "issuer": "string",
+    "payment_method": "card|upi|netbanking",
+    "event_type": "authorization|capture|retry|failure|latency",
+    "status": "success|failure",
+    "latency_ms": "number",
+    "retry_count": "number",
+    "error_code": "string|null",
+    "cost": "number"
+  }
+  

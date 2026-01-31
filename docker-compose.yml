@@ -37,5 +37,19 @@ services:
   prometheus:
     image: prom/prometheus
     container_name: prometheus
-    ports:
+    ports: 
       - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    depends_on:
+      - payment-gateway
+
+  payment-gateway:
+    container_name: payment-gateway
+    build: ./services/payment-gateway-service
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redpanda

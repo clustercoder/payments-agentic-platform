@@ -132,6 +132,7 @@ services:
       - redpanda
     networks:
       - backend
+  
 
 volumes:
   policy_audit:

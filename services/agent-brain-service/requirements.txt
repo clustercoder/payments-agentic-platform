@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+kafka-python
+pydantic
+# LangChain V1 Migration
+langchain-classic>=1.0.0
+langchain-openai
+langchain-community
+langchain-text-splitters
+langgraph
+# Vector Store & AI
+faiss-cpu
+openai
+tiktoken
+unstructured

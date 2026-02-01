@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+kafka-python
+numpy
+torch
+gymnasium
+redis
+pydantic

@@ -82,3 +82,46 @@ services:
     ports:
       - "8002:8002"
 
+  agent-brain:
+    build: ./services/agent-brain-service
+    container_name: agent-brain
+    depends_on:
+      - redpanda
+    ports:
+      - "8003:8003"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - open_api_key=${OPENAI_API_KEY}
+
+  rl-policy-service:
+    build: ./services/rl-policy-service
+    container_name: rl-policy-service
+    ports:
+      - "8005:8005"
+    depends_on:
+      - redpanda
+      - redis
+    environment:
+      - PYTHONUNBUFFERED=1
+      - KAFKA_BOOTSTRAP_SERVERS=redpanda:9092
+
+
+  policy-executor:
+    build: ./services/policy-executor-service
+    command: python -u app/main.py
+    container_name: policy-executor
+    volumes:
+      - policy_audit:/data
+    depends_on:
+      - redpanda
+      - redis
+    environment:
+      - PYTHONPATH=/app
+      - PYTHONUNBUFFERED=1
+      - AUTO_EXECUTE_HIGH_CONFIDENCE=true
+      - AUTO_EXECUTE_THRESHOLD=0.8
+volumes:
+  policy_audit:
+
+
+  

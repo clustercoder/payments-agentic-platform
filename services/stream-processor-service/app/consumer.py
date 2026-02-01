@@ -45,6 +45,34 @@ def start():
                 enriched["status"]
             ).inc()
 
+            # --- START NEW CODE: FEEDBACK GENERATION ---
+            # Calculate Reward (simplified version of the logic in rl-policy-service/app/env.py)
+            # Reward: +1 for success, -penalty for latency/failure
+            success = 1.0 if enriched["status"] == "success" else 0.0
+            latency_penalty = min(enriched["latency_ms"] / 5000.0, 1.0) # Normalize latency
+            reward = success - latency_penalty
+            
+            # Construct Feedback Payload
+            # Note: Ideally 'action' comes from Redis/Policy Executor. 
+            # Here we use a placeholder '0' (NO_OP) or derive it if available.
+            feedback_payload = {
+                "anomaly_id": enriched.get("event_id"), # correlating ID
+                "state": [
+                    success,
+                    latency_penalty,
+                    enriched.get("retry_count", 0) / 5.0, # Normalize retries
+                    0.0, # cost placeholder
+                    0.0  # risk placeholder
+                ],
+                "action": 0, # Placeholder for "action taken"
+                "reward": reward,
+                "timestamp": enriched["timestamp"]
+            }
+            
+            # Produce to agent.feedback
+            producer.send("agent.feedback", feedback_payload)
+            # --- END NEW CODE ---
+
             producer.send("payments.enriched", enriched)
             producer.flush()
 

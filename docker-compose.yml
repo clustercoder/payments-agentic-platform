@@ -24,6 +24,8 @@ services:
     ports:
       - "9092:9092"
       - "9644:9644"
+    networks:
+      - backend
 
 
   redis:
@@ -92,6 +94,8 @@ services:
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - open_api_key=${OPENAI_API_KEY}
+    networks:
+      - backend
 
   rl-policy-service:
     build: ./services/rl-policy-service
@@ -120,8 +124,19 @@ services:
       - PYTHONUNBUFFERED=1
       - AUTO_EXECUTE_HIGH_CONFIDENCE=true
       - AUTO_EXECUTE_THRESHOLD=0.8
+
+  audit-ledger:
+    build: ./services/audit-ledger-service
+    container_name: audit-ledger
+    depends_on:
+      - redpanda
+    networks:
+      - backend
+
 volumes:
   policy_audit:
 
 
-  
+networks:
+  backend:
+    driver: bridge
